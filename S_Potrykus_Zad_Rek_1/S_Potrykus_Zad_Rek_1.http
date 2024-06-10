@@ -1,0 +1,6 @@
+@S_Potrykus_Zad_Rek_1_HostAddress = http://localhost:5272
+
+GET {{S_Potrykus_Zad_Rek_1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
