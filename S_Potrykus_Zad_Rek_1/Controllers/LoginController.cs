@@ -28,15 +28,15 @@ namespace S_Potrykus_Zad_Rek_1.Controllers
             SqlDataAdapter adapter = new SqlDataAdapter("SELECT Password FROM Contacts WHERE email = '" + contact.Email + "';", con);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
-            var check = VerifyPassword(contact.Password, Convert.ToString(dataTable.Rows[0]["password"]));
-            if (check)
+            if(dataTable.Rows.Count > 0)
             {
-                return contact;
+                var check = VerifyPassword(contact.Password, Convert.ToString(dataTable.Rows[0]["password"]));
+                if (check)
+                {
+                    return contact;
+                }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
         // Generating a secure token for login purposes
         private string GenerateToken(Contact contact)

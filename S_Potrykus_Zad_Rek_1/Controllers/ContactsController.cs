@@ -101,17 +101,19 @@ namespace S_Potrykus_Zad_Rek_1.Controllers
                 $"('{contact.Name}','{contact.LastName}','{contact.Email}','{_loginController.EncodePassword(contact.Password)}','{contact.Category}', '{contact.CategorySecondary}', {contact.Phone}, '{contact.DateOfBirth}');");
             cmd.Connection = con;
             con.Open();
-            int i = cmd.ExecuteNonQuery(); // Excecute querry
-            con.Close();
-            if (i > 0) // Check if update was successful
+            try
             {
-                return "Contact added";
+               cmd.ExecuteNonQuery(); // Excecute querry
             }
-            else
+            catch(Exception ex)
             {
-                return "Unexpected error occured";
+                return ex.Message;
             }
-
+            finally
+            {
+                con.Close();
+            }
+            return "Contact added";
         }
     }
 }
