@@ -76,17 +76,20 @@ namespace S_Potrykus_Zad_Rek_1.Controllers
                 $" category = '{contact.Category}', categorySecondary = '{contact.CategorySecondary}', phonenumber = '{contact.Phone}', dateofbirth = '{contact.DateOfBirth}' WHERE email = '{contact.oldEmail}'");
             cmd.Connection = con;
             con.Open();
-            int i = cmd.ExecuteNonQuery(); // Excecute querry
-            con.Close();
-            if(i > 0) // Check if update was successful
+            try
             {
-                return "Contact updated";
+                cmd.ExecuteNonQuery(); // Excecute querry
             }
-            else
+            catch (Exception ex)
             {
-                return "Unexpected error occured";
+                return "Email already exists";
             }
-            
+            finally
+            {
+                con.Close();
+            }
+            return "Contact edited";
+
         }
         [Authorize] // Require authorization (being logged in) to execute
         [HttpPost]
@@ -100,6 +103,10 @@ namespace S_Potrykus_Zad_Rek_1.Controllers
                 $"(FirstName, LastName, email, password, category, categorySecondary, phonenumber, dateofbirth) VALUES " +
                 $"('{contact.Name}','{contact.LastName}','{contact.Email}','{_loginController.EncodePassword(contact.Password)}','{contact.Category}', '{contact.CategorySecondary}', {contact.Phone}, '{contact.DateOfBirth}');");
             cmd.Connection = con;
+            if(contact.Name == null || contact.LastName == null || contact.Email == null || contact.Phone == null || contact.DateOfBirth == null)
+            {
+                return "Fill in all fields";
+            }
             con.Open();
             try
             {
@@ -107,7 +114,7 @@ namespace S_Potrykus_Zad_Rek_1.Controllers
             }
             catch(Exception ex)
             {
-                return ex.Message;
+                return "Email already exists";
             }
             finally
             {
